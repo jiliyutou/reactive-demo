@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %p [%c] - %m%n"/>
+        </Console>
+        <RollingRandomAccessFile name="File" fileName="logs/log_"
+                                 append="true"
+                                 filePattern="logs/log_%d{yyyy-MM-dd}_%i.log.gz" immediateFlush="false">
+            <PatternLayout charset="utf8">
+                <Pattern>%d %p [%c] - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="200 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="200">
+                <Delete basePath="logs" maxDepth="1">
+                    <IfFileName glob="log_*.log.gz">
+                        <IfLastModified age="14d" />
+                    </IfFileName>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <Loggers>
+        <logger name="proxyserver" level="INFO" additivity="false">
+            <AppenderRef ref="File" />
+            <AppenderRef ref="Console" />
+        </logger>
+        <logger name="io.netty" level="INFO">
+            <AppenderRef ref="File" />
+            <AppenderRef ref="Console" />
+        </logger>
+        <logger name="com.netflix" level="INFO">
+            <AppenderRef ref="File" />
+            <AppenderRef ref="Console" />
+        </logger>
+        <root level="INFO">
+            <appender-ref ref="File" />
+            <appender-ref ref="Console" />
+        </root>
+    </Loggers>
+
+</Configuration>
